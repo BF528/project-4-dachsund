@@ -1,7 +1,9 @@
+# Install pacakges:
 library(Seurat)
+# Say yes to installing miniconda
 library(dplyr)
 
-prog_data <- readRDS("GSM2230760_seurat.rda")
+prog_data <- readRDS("GSM2230760_seurat_anau.rda")
 
 # Finding differentially expressed features (cluster biomarkers)
 # Find markers for every cluster compared to all remaining cells, report 
@@ -12,17 +14,19 @@ diff_markers <- FindAllMarkers(prog_data, only.pos=TRUE, min.pct=0.25,
 
 # Look at only the top ones:
 grptop <- diff_markers %>% group_by(cluster) %>% top_n(n=5, wt=avg_log2FC)
+top3 <- diff_markers %>% group_by(cluster) %>% top_n(n=3, wt=avg_log2FC)
 
 #TODO: Look at VLN plots??
-# TODO: 
+# TODO: MAKE THE IMAGES MUCH MUCH SMALLER!!!!
 for (feature in c("GCG", "INS",  "SST", "PPY", "GHRL", "KRT19",
                   "CPA1", "PDGFRB", "VWF", "PECAM1", "CD34",
                   "CD163", "CD68", 
                   "TPSAB1", "KIT", "CPA3")){
-temp_vln <- VlnPlot(prog_data, features=c(feature))
-show(temp_vln)
-# TODO fix the paste
-save.image(paste(feature, ".png", sep=""))
+  temp_file <- paste(feature, ".png", sep="")
+  png(temp_file, width=800, height=800)
+  temp_vln <- VlnPlot(prog_data, features=c(feature))
+  # TODO fix the paste
+  save.image(temp_vln, file=temp_file)
 }
 
 
@@ -38,7 +42,7 @@ myvln
 save.image("myvln.png")
 save.image("myvln.jpg")
 
-top3 <- diff_markers %>% group_by(cluster) %>% top_n(n=3, wt=avg_log2FC)
+
 # TODO: try original object
 
 # Try heatmap:
