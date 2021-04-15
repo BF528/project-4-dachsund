@@ -1,0 +1,16 @@
+#!/bin/bash -l
+
+#$ -cwd
+#$ -P bf528
+#$ -j y
+#$ -l h_rt=24:00:00 
+
+module load salmon
+
+echo "Running job $JOB_ID"
+echo "Started: $(date +%F) $(date +%T)"
+echo "Running in directory: $PWD"
+
+salmon index -t gencodec37transcripts.fa.gz --gencode -i transcript_index -k 31
+
+echo "Job finished: $(date +%F) $(date +%T)"

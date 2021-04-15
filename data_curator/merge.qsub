@@ -1,0 +1,16 @@
+#!/bin/bash -l
+
+#$ -cwd
+#$ -P bf528
+#$ -j y
+#$ -l h_rt=24:00:00 
+
+module load python3
+
+echo "Running job $JOB_ID"
+echo "Started: $(date +%F) $(date +%T)"
+echo "Running in directory: $PWD"
+
+python3 merge.py SRR3879604_1_bc_output.csv SRR3879605_1_bc_output.csv SRR3879606_1_bc_output.csv
+
+echo "Job finished: $(date +%F) $(date +%T)"
