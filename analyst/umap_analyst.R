@@ -1,9 +1,10 @@
-# Install pacakges:
+# Load pacakges:
 library(Seurat)
 # Say yes to installing miniconda
 library(dplyr)
 
 prog_data <- readRDS("GSM2230760_seurat_anau.rda")
+prog_data2 <- readRDS("GSM2230760_seurat_anau.rda")
 
 # Finding differentially expressed features (cluster biomarkers)
 # Find markers for every cluster compared to all remaining cells, report 
@@ -13,8 +14,11 @@ diff_markers <- FindAllMarkers(prog_data, only.pos=TRUE, min.pct=0.25,
                                logfc.threshold=0.25)
 
 # Look at only the top ones:
-grptop <- diff_markers %>% group_by(cluster) %>% top_n(n=5, wt=avg_log2FC)
+top5 <- diff_markers %>% group_by(cluster) %>% top_n(n=5, wt=avg_log2FC)
 top3 <- diff_markers %>% group_by(cluster) %>% top_n(n=3, wt=avg_log2FC)
+top10 <- diff_markers %>% group_by(cluster) %>% top_n(n=10, wt=avg_log2FC)
+
+VlnPlot(prog_data, "CD68", pt.size = 0.0001)
 
 #TODO: Look at VLN plots??
 # TODO: MAKE THE IMAGES MUCH MUCH SMALLER!!!!
@@ -22,21 +26,31 @@ for (feature in c("GCG", "INS",  "SST", "PPY", "GHRL", "KRT19",
                   "CPA1", "PDGFRB", "VWF", "PECAM1", "CD34",
                   "CD163", "CD68", 
                   "TPSAB1", "KIT", "CPA3")){
-  temp_file <- paste(feature, ".png", sep="")
-  png(temp_file, width=800, height=800)
-  temp_vln <- VlnPlot(prog_data, features=c(feature))
+  #TODO temp_file <- paste(feature, ".png", sep="")
+  #TODO png(temp_file, width=800, height=800)
+  # temp_vln <- VlnPlot(prog_data, features=c(feature), pt.size=0.0001)
+  VlnPlot(prog_data, features=c(feature), pt.size=0.0001)
+  # dev.copy(png, paste(feature, ".png", sep="))
+  # dev.off()
   # TODO fix the paste
-  save.image(temp_vln, file=temp_file)
+  #TODO save.image(temp_vln, file=temp_file)
 }
 
 
 # TODO: try to make plots smaller, including maybe removing plotting the individual points
 
-myvln <- VlnPlot(prog_data, features=c("GCG", "INS",  "SST", "PPY", "GHRL", "KRT19",
+# myvln <- VlnPlot(prog_data, features=c("GCG", "INS",  "SST", "PPY", "GHRL", "KRT19",
+#                                       "CPA1", "PDGFRB", "VWF", "PECAM1", "CD34",
+#                                       "CD163", "CD68", "IgG", "CD3", "CD8",
+#                                       "TPSAB1", "KIT", "CPA3"), pt.size=0.0001)
+
+# TODO: add back in "IgG", "CD3", "CD8",
+VlnPlot(prog_data, features=c("GCG", "INS",  "SST", "PPY", "GHRL", "KRT19",
                                        "CPA1", "PDGFRB", "VWF", "PECAM1", "CD34",
-                                       "CD163", "CD68", "IgG", "CD3", "CD8",
-                                       "TPSAB1", "KIT", "CPA3"))
-myvln
+                                       "CD163", "CD68", 
+                                       "TPSAB1", "KIT", "CPA3"), pt.size=0,
+        combine=TRUE)
+
 
 #TODO: fix saving 
 save.image("myvln.png")
@@ -46,6 +60,12 @@ save.image("myvln.jpg")
 # TODO: try original object
 
 # Try heatmap:
+DoHeatmap(prog_data, features=top3$gene)
+DoHeatmap(prog_data, features=top5$gene)
+DoHeatmap(prog_data, features=top10$gene)
+
+DimHeatmap(prog_data, dims=1, cells=500, balanced=TRUE)
+
 map <- DoHeatmap(prog_data, features=top10$gene)
 map
 save.image("map.png")
