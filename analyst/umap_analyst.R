@@ -1,3 +1,7 @@
+# Runs differential expression analysis across clusters
+# Makes violin plots, heatmap, and UMAP representing each of the clusters
+# Allison Nau
+
 # Load packages:
 library(Seurat)
 # Say yes to installing miniconda
