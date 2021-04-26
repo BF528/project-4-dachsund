@@ -189,7 +189,7 @@ umap_plot <- DimPlot(my_umap1, reduction="umap", label=TRUE, pt.size=1)
 umap_plot
 
 # Save UMAP:
-png(filename="umap.png")
+png(filename="umap.png", width=600, height=400)
 umap_plot
 dev.off()
 
@@ -270,7 +270,7 @@ clust4_top9genes <- row.names(clust4_top9)
 clust4_top9genes
 # Make violin plot of top8 genes:
 clust4_vplot9 <- VlnPlot(prog_data, features=clust4_top9genes, pt.size=0, combine=TRUE)
-png(filename="clust4_vplotTop8.png", width=1000, height=1000)
+png(filename="clust4_vplotTop9.png", width=1000, height=1000)
 clust4_vplot9
 dev.off()
 # Make violin plot of all genes:
