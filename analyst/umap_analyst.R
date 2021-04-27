@@ -46,8 +46,6 @@ prog_data <- RenameIdents(prog_data, new_ids)
 # cluster
 diff_markers <- FindAllMarkers(prog_data, only.pos=TRUE, min.pct=0.25, 
                                logfc.threshold=0.25)
-# TODO diff_markers_s <- FindAllMarkers(prog_data_s, only.pos=TRUE, min.pct=0.25, 
-#                               logfc.threshold=0.25)
 diff_markers$gene
 
 # Filter on only significant markers:
@@ -70,9 +68,24 @@ novel_markers <- function(cluster, marker_gene){
   # Find the significance level for that gene:
   min_sign <- diff_markers_sign$p_val_adj[diff_markers_sign$cluster == cluster & 
                                             diff_markers_sign$gene == marker_gene]
-  # Then filter on cluster and significance level:
+  # Percent positive in cluster:
+  in_pct <- diff_markers_sign$pct.1[diff_markers_sign$cluster == cluster & 
+                                           diff_markers_sign$gene == marker_gene]
+  # Percent positive outside of cluster:
+  out_pct <- diff_markers_sign$pct.2[diff_markers_sign$cluster == cluster & 
+                                       diff_markers_sign$gene == marker_gene]
+  # Min difference in percent:
+  min_diff <- in_pct - out_pct
+  # Min fold change:
+  min_fc <- diff_markers_sign$avg_log2FC[diff_markers_sign$cluster == cluster & 
+                                             diff_markers_sign$gene == marker_gene]
+  # Then filter on cluster and significance level, min fold change, min 
+  # percent difference:
   temp_df <- diff_markers_sign[(diff_markers_sign$cluster == cluster & 
-                                  diff_markers_sign$p_val_adj<=min_sign),]
+                                  diff_markers_sign$p_val_adj<=min_sign &
+                                  diff_markers_sign$avg_log2FC>=min_fc &
+                                  diff_markers_sign$pct.1 - 
+                                  diff_markers_sign$pct.2>=min_diff),]
   return (temp_df)
 }
 
@@ -85,7 +98,7 @@ c2 <- novel_markers("Alpha_2", "GCG")
 # Cluster 3 (Delta)
 c3 <- novel_markers("Delta", "SST")
 # Cluster 4 (Unknown)
-# TODO
+# 
 # Cluster 5 (Ductal)
 c5 <- novel_markers("Ductal", "KRT19")
 # Cluster 6 (Stellate)
@@ -100,15 +113,15 @@ c9 <- novel_markers("Gamma", "PPY")
 c10 <- novel_markers("Macrophage", "CD68")
 # Cluster 11 (Vascular)
 # Which gene is of lower significance?
-VWF <- diff_markers_sign$p_val_adj[diff_markers_sign$cluster == "Vascular" & 
-                                       diff_markers_sign$gene == "VWF"]
-VWF  # 0 , so use the other as the threshold
-PECAM1 <- diff_markers_sign$p_val_adj[diff_markers_sign$cluster == "Vascular" & 
-                                     diff_markers_sign$gene == "PECAM1"]
+VWF <- diff_markers_sign[diff_markers_sign$cluster == "Vascular" & 
+                                       diff_markers_sign$gene == "VWF", ]
+VWF  # 0 p-adj, but lower log2FC so use this one
+PECAM1 <- diff_markers_sign[diff_markers_sign$cluster == "Vascular" & 
+                                     diff_markers_sign$gene == "PECAM1",]
 PECAM1  # 0 too
-c11 <- novel_markers("Vascular", "PECAM1")
+c11 <- novel_markers("Vascular", "VWF")
 
-# Combine novel markers of all  # TODO: skipping cluster 4
+# Combine novel markers of all
 novel_markers_all <- rbind(c0, c1, c2, c3, c5, c6, c7, c8, c9, c10, c11)
 
 # Save to csv:
@@ -118,8 +131,6 @@ write.csv(novel_markers_all, file="novel_markers_all.csv")
 # abbreviated:
 novel_counts <- tabyl(novel_markers_all, cluster)
 write.csv(novel_counts, file="novel_counts.csv")
-
-# TODO: Cluster 4 is NOT delta
 
 # -----------------------------------------------------------------------------
 # Look at only the top geness:
