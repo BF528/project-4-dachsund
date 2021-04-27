@@ -4,10 +4,10 @@ A brief description of what this repository is for and what it contains
 
 # Contributors
 
-Data Curator: Mae Rose Gott
-Programmer: Abhishek Thakar
-Analyst: Allison Nau
-Biologist: Sheila Yee
+Data Curator: Mae Rose Gott  
+Programmer: Abhishek Thakar  
+Analyst: Allison Nau  
+Biologist: Sheila Yee  
 
 # Repository Contents
 
