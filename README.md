@@ -12,6 +12,8 @@ Biologist: Sheila Yee
 # Repository Contents
 
 ### Programs from Programmer, Abhishek Thakar:
+
+#### Programmer_code.R ####
 Using Seurat and tximport packages to get alevin output files and create seurat object for further downstream analysis
 Created cluster sizes by cell counts and filtered data to low quality cells and low variance counts. Includes normalization prior to low variance filter step.
 
