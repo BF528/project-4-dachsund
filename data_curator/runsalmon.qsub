@@ -4,6 +4,8 @@
 #$ -P bf528
 #$ -j y
 #$ -l h_rt=24:00:00 
+#$ -l mem_total=200G
+#$ -pe omp 16
 
 module load salmon
 
@@ -11,8 +13,8 @@ echo "Running job $JOB_ID"
 echo "Started: $(date +%F) $(date +%T)"
 echo "Running in directory: $PWD"
 
-DIR=/projectnb/bf528/project_4_scrnaseq/fastq/SRR387960
+DIR=/projectnb/bf528/project_4_scrnaseq/fastq
 
-salmon alevin -l ISR -1 $DIR4_1.fastq.gz $DIR5_1.fastq.gz $DIR6_1.fastq.gz -2 $DIR4_2.fastq.gz $DIR5_2.fastq.gz $DIR6_2.fastq.gz -i transcript_index -p 10 -o alevin_output --tgMap map.tsv --whitelist whitelist.csv --end 5 --barcodeLength 19 --umiLength 6
+salmon alevin -l ISR -1 $DIR/SRR3879604/SRR3879604_1_bc.fastq.gz $DIR/SRR3879605/SRR3879605_1_bc.fastq.gz $DIR/SRR3879606/SRR3879606_1_bc.fastq.gz -2 $DIR/SRR3879604/SRR3879604_2.fastq.gz $DIR/SRR3879605/SRR3879605_2.fastq.gz  $DIR/SRR3879606/SRR3879606_2.fastq.gz --end 5 --barcodeLength 19 --umiLength 6 -i transcript_index -p 10 -o alevin_output2 --tgMap mapv2.tsv --whitelist wl.csv 
 
 echo "Job finished: $(date +%F) $(date +%T)"
