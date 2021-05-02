@@ -1,3 +1,4 @@
-# Packages to install for cluster analysis
+# Installs necessary packages for cluster analysis
+# Allison Nau
 
 install.packages('Seurat')
