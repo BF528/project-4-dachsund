@@ -16,6 +16,25 @@ Analyst: Allison Nau
 Biologist: Sheila Yee  
 
 # Repository Contents
+### Programs from Data Curator, Mae Rose Gott:
+
+#### indexer.qsub ####
+Using a gencode gene transcript and Salmon v1.4.0, creates an index for the salmon alevin.
+
+#### merge.qsub ; merge.py ####
+Qsub and python code. Python code written in 3.8.5 takes in multiple csv of barcode distributions and merges them together in one csv. Imports csv and sys modules. Specifically designed to take in the results of sort.py listed below. Qsub script calls the program on specified files
+
+#### plotSort.R ####
+Written in RStudio v4.0.2, reads a csv which is the output of merge_sort.py, graphs the distribution, and creates a whitelist after filtering low-count occurances. Outputs a barcode whitelist
+
+#### runsalmon.qsub ####
+Uses Salmon v1.4.0 to run salmon alevin on a series of 3 pairs of fastq files for a final quant count matrix. Runs with an index, whitelist, and gene map
+
+#### sort.py ####
+Python program that takes in a fastq file, isolates and sorts the barcodes, and then prints the resulting matrix of barcodes with their frequencies to a csv file whose name is the name of the input file + "output.csv". Requires Python 3 (run on 3.8.5) and imports the sys, gzip, and csv packages.
+
+#### ssrsort.qsub, ssrsort5/6.qsub ####
+Qsub script to run sort.py on a fastq file. Each script differs in which fastq file it calls. Puns with Python 3 (v 3.8.5)
 
 ### Programs from Programmer, Abhishek Thakar:
 
